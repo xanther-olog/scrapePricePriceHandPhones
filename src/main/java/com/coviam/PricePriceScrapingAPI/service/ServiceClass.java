@@ -1,8 +1,10 @@
 package com.coviam.PricePriceScrapingAPI.service;
 
 import com.coviam.PricePriceScrapingAPI.dto.PPSearchListDto;
+import com.coviam.PricePriceScrapingAPI.entity.PDPEntity;
 import com.coviam.PricePriceScrapingAPI.entity.PPSearchList;
-import com.coviam.PricePriceScrapingAPI.repository.JpaMongoRepository;
+import com.coviam.PricePriceScrapingAPI.repository.AddPDPDataToMongo;
+import com.coviam.PricePriceScrapingAPI.repository.AddPDPUrlsToMongo;
 import com.coviam.PricePriceScrapingAPI.strings.FinalStrings;
 import com.coviam.PricePriceScrapingAPI.threads.ThreadToGetPDPUrls;
 import com.coviam.PricePriceScrapingAPI.threads.ThreadToScrapePricePricePdp;
@@ -30,7 +32,11 @@ public class ServiceClass implements ServiceInterface {
 
 
     @Autowired
-    JpaMongoRepository jpaMongoRepository;
+    AddPDPUrlsToMongo jpaMongoRepository;
+
+
+    @Autowired
+    AddPDPDataToMongo addPDPDataToMongo;
 
     @SneakyThrows
     @Override
@@ -133,7 +139,7 @@ public class ServiceClass implements ServiceInterface {
         ExecutorService executorService= Executors.newFixedThreadPool(5);
         for(int i=0;i<5;i++){
             PPSearchList ppSearchList=allProducts.get(i);
-            Runnable runnable=new ThreadToScrapePricePricePdp(ppSearchList);
+            Runnable runnable=new ThreadToScrapePricePricePdp(ppSearchList, this);
             executorService.execute(runnable);
         }
         executorService.shutdown();
@@ -161,6 +167,37 @@ public class ServiceClass implements ServiceInterface {
             }
         }
         return allProductDetails;
+    }
+
+
+    @Override
+    public String getLargeAlphaNumericString() {
+        int n=35;
+        byte[] array=new byte[256];
+        new Random().nextBytes(array);
+        String randomString=new String(array, Charset.forName("UTF-8"));
+        StringBuffer r = new StringBuffer();
+        for (int k=0;k<randomString.length();k++){
+            char ch = randomString.charAt(k);
+            if (((ch>='a' && ch<='z')
+                    || (ch>='A' && ch<='Z')
+                    || (ch>='0' && ch<='9'))
+                    && (n>0)){
+                r.append(ch);
+                n--;
+            }
+        }
+        return r.toString();
+    }
+
+    @Override
+    public void addPDPToMongo(PDPEntity pdpEntity) {
+        addPDPDataToMongo.save(pdpEntity);
+    }
+
+    @Override
+    public List<PDPEntity> getAllHandPhoneData() {
+        return addPDPDataToMongo.findAll();
     }
 
 

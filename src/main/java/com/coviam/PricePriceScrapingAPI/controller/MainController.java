@@ -1,7 +1,9 @@
 package com.coviam.PricePriceScrapingAPI.controller;
 
 import com.coviam.PricePriceScrapingAPI.dto.PPSearchListDto;
+import com.coviam.PricePriceScrapingAPI.entity.PDPEntity;
 import com.coviam.PricePriceScrapingAPI.entity.PPSearchList;
+import com.coviam.PricePriceScrapingAPI.response.HandPhoneDataResponse;
 import com.coviam.PricePriceScrapingAPI.response.MongoPPResults;
 import com.coviam.PricePriceScrapingAPI.service.ServiceClass;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,5 +63,14 @@ public class MainController {
         return "ok";
 
     }
+
+
+    @GetMapping("/gethandphonedetail")
+    public ResponseEntity<HandPhoneDataResponse> getHandPhoneData(){
+        List<PDPEntity> allHandPhoneData=serviceClass.getAllHandPhoneData();
+        System.out.println("All handphone data size: "+allHandPhoneData.size());
+        return ResponseEntity.ok(new HandPhoneDataResponse(allHandPhoneData));
+    }
+
 
 }

@@ -4,6 +4,7 @@ package com.coviam.PricePriceScrapingAPI.threads;
 import com.coviam.PricePriceScrapingAPI.entity.ExternalWebsitePrice;
 import com.coviam.PricePriceScrapingAPI.entity.PDPEntity;
 import com.coviam.PricePriceScrapingAPI.entity.PPSearchList;
+import com.coviam.PricePriceScrapingAPI.service.ServiceClass;
 import com.coviam.PricePriceScrapingAPI.strings.FinalStrings;
 import lombok.SneakyThrows;
 import org.openqa.selenium.*;
@@ -11,8 +12,11 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.interactions.Actions;
 
+
+
 import java.util.ArrayList;
 import java.util.List;
+
 
 public class ThreadToScrapePricePricePdp implements Runnable {
 
@@ -20,11 +24,16 @@ public class ThreadToScrapePricePricePdp implements Runnable {
     int rank;
     String productName;
 
-    public ThreadToScrapePricePricePdp(PPSearchList ppSearchList) {
+
+    ServiceClass serviceClass;
+
+    public ThreadToScrapePricePricePdp(PPSearchList ppSearchList, ServiceClass serviceClass) {
         this.pdpUrl=ppSearchList.getProductUrl();
         this.rank=ppSearchList.getRank();
         this.productName=ppSearchList.getProductName();
+        this.serviceClass = serviceClass;
     }
+
 
     @SneakyThrows
     @Override
@@ -90,9 +99,10 @@ public class ThreadToScrapePricePricePdp implements Runnable {
                     pdpEntity.setProductRam("-");
                     pdpEntity.setProductColor(currentColor);
                     pdpEntity.setListOfExternalPrices(listOfPriceDetails);
+                    pdpEntity.setIdentifier(serviceClass.getLargeAlphaNumericString());
 
-                    synchronized (System.out){
-                        System.out.println(pdpEntity);
+                    synchronized (serviceClass){
+                        serviceClass.addPDPToMongo(pdpEntity);
                     }
 
 
@@ -154,9 +164,10 @@ public class ThreadToScrapePricePricePdp implements Runnable {
                             pdpEntity.setProductRam(currentVariant);
                             pdpEntity.setProductColor(currentColor);
                             pdpEntity.setListOfExternalPrices(listOfPriceDetails);
+                            pdpEntity.setIdentifier(serviceClass.getLargeAlphaNumericString());
 
-                            synchronized (System.out){
-                                System.out.println(pdpEntity);
+                            synchronized (serviceClass){
+                                serviceClass.addPDPToMongo(pdpEntity);
                             }
 
                         }else if(variantAvailable.equals("Storage")){
@@ -165,8 +176,9 @@ public class ThreadToScrapePricePricePdp implements Runnable {
                             pdpEntity.setProductRam("-");
                             pdpEntity.setProductColor(currentColor);
                             pdpEntity.setListOfExternalPrices(listOfPriceDetails);
-                            synchronized (System.out){
-                                System.out.println(pdpEntity);
+                            pdpEntity.setIdentifier(serviceClass.getLargeAlphaNumericString());
+                            synchronized (serviceClass){
+                                serviceClass.addPDPToMongo(pdpEntity);
                             }
                         }
                     }
@@ -258,8 +270,9 @@ public class ThreadToScrapePricePricePdp implements Runnable {
                             pdpEntity.setProductRam(currentRam);
                             pdpEntity.setProductColor(currentColor);
                             pdpEntity.setListOfExternalPrices(listOfPriceDetails);
-                            synchronized (System.out) {
-                                System.out.println(pdpEntity);
+                            pdpEntity.setIdentifier(serviceClass.getLargeAlphaNumericString());
+                            synchronized (serviceClass) {
+                                serviceClass.addPDPToMongo(pdpEntity);
 
                             }
                         }
@@ -326,8 +339,9 @@ public class ThreadToScrapePricePricePdp implements Runnable {
                             pdpEntity.setProductRam(currentRam);
                             pdpEntity.setProductColor("-");
                             pdpEntity.setListOfExternalPrices(listOfPriceDetails);
-                            synchronized (System.out) {
-                                System.out.println(pdpEntity);
+                            pdpEntity.setIdentifier(serviceClass.getLargeAlphaNumericString());
+                            synchronized (serviceClass) {
+                                serviceClass.addPDPToMongo(pdpEntity);
 
                             }
 
@@ -382,9 +396,10 @@ public class ThreadToScrapePricePricePdp implements Runnable {
                             pdpEntity.setProductRam(currentVariant);
                             pdpEntity.setProductColor("-");
                             pdpEntity.setListOfExternalPrices(listOfPriceDetails);
+                            pdpEntity.setIdentifier(serviceClass.getLargeAlphaNumericString());
 
-                            synchronized (System.out){
-                                System.out.println(pdpEntity);
+                            synchronized (serviceClass){
+                                serviceClass.addPDPToMongo(pdpEntity);
                             }
 
                         }else if(variantAvailable.equals("Storage")){
@@ -393,8 +408,9 @@ public class ThreadToScrapePricePricePdp implements Runnable {
                             pdpEntity.setProductRam("-");
                             pdpEntity.setProductColor("-");
                             pdpEntity.setListOfExternalPrices(listOfPriceDetails);
-                            synchronized (System.out){
-                                System.out.println(pdpEntity);
+                            pdpEntity.setIdentifier(serviceClass.getLargeAlphaNumericString());
+                            synchronized (serviceClass){
+                                serviceClass.addPDPToMongo(pdpEntity);
                             }
                         }
                     }
@@ -427,9 +443,9 @@ public class ThreadToScrapePricePricePdp implements Runnable {
                     pdpEntity.setProductRam("-");
                     pdpEntity.setProductColor("-");
                     pdpEntity.setListOfExternalPrices(listOfPriceDetails);
-                    synchronized (System.out) {
-                        System.out.println(pdpEntity);
-
+                    pdpEntity.setIdentifier(serviceClass.getLargeAlphaNumericString());
+                    synchronized (serviceClass) {
+                        serviceClass.addPDPToMongo(pdpEntity);
                     }
                 }
             }

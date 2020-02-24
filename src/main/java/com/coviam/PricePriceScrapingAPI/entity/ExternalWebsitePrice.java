@@ -9,6 +9,5 @@ import lombok.ToString;
 @ToString
 public class ExternalWebsitePrice {
     String price;
-    //String merchantName;
     String externalUrl;
 }
